@@ -6,10 +6,16 @@ const game = (function () {
         thirdRow: ['', '', '']
     };
 
-    const players = {
-        playerOne: '',
-        playerTwo: ''
+    const score = {
+        playerOne: 0,
+        playerTwo: 0,
     };
+
+    const settings = {
+        playerOne: '',
+        playerTwo: '',
+        gameMode: ''
+    }
 
     const turn = {
         player: '',
@@ -17,12 +23,16 @@ const game = (function () {
         gameOver: false
     }
 
-    function resetGame () {
+    function resetGame() {
         turn.gameOver = false;
         turn.counter = 1;
         turn.player = '';
-        players.playerOne = '';
-        players.playerTwo = '';
+        score.playerOne = 0;
+        score.playerTwo = 0;
+        settings.playerOne = '';
+        settings.playerTwo = '';
+        settings.computerScore = 0;
+        settings.gameMode = '';
         gameBoard.firstRow = ['', '', ''];
         gameBoard.secondRow = ['', '', ''];
         gameBoard.thirdRow = ['', '', ''];
@@ -31,33 +41,38 @@ const game = (function () {
 
     // Writes X or O depending on player, 'row' or others and the index 0, 1 or 3. Example: writeBoard('player1', 'firstRow', 1)
     function writeBoard(row, index) {
+        if (settings.gameMode === 'pvp') {
         if (turn.gameOver) {
             return;
         }
-        if (turn.player === players.playerOne && gameBoard[row][index] === '') {
+        if (turn.player === settings.playerOne && gameBoard[row][index] === '') {
             gameBoard[row][index] = 'X';
             checkWinner()
             if (turn.gameOver) {
                 return;
             } else {
-            turn.player = players.playerTwo;
-            turn.counter += 1;
-            console.table(gameBoard);
-            console.log(`It's ${turn.player}'s turn!`);}
-        } else if (turn.player === players.playerTwo && gameBoard[row][index] === '') {
+                turn.player = settings.playerTwo;
+                turn.counter += 1;
+                console.table(gameBoard);
+                console.log(`It's ${turn.player}'s turn!`);
+            }
+        } else if (turn.player === settings.playerTwo && gameBoard[row][index] === '') {
             gameBoard[row][index] = 'O';
             checkWinner()
             if (turn.gameOver) {
                 return;
             } else {
-            turn.player = players.playerOne;
-            turn.counter += 1;
-            console.table(gameBoard);
-            console.log(`It's ${turn.player}'s turn!`);}
+                turn.player = settings.playerOne;
+                turn.counter += 1;
+                console.table(gameBoard);
+                console.log(`It's ${turn.player}'s turn!`);
+            }
         } else {
             console.table(gameBoard);
-            console.log('That position is occupied! Try again');
+            console.log('That position is occupied! Try a different move');
             return;
+        }} else if (settings.gameMode === 'pve') {
+            //computer game functions
         }
     };
 
@@ -68,6 +83,10 @@ const game = (function () {
             gameBoard.thirdRow.every((element, index, arr) => element !== '' && element === arr[0])
         ) {
             console.log(`${turn.player} won!`);
+            console.table(gameBoard);
+            turn.player === settings.playerOne ? score.playerOne += 1 : score.playerTwo += 1;
+            console.log(score.playerOne);
+            console.log(score.playerTwo);
             turn.gameOver = true;
         } else if ( //check columns
             (gameBoard.firstRow[0] !== '' &&
@@ -81,6 +100,10 @@ const game = (function () {
                 gameBoard.secondRow[2] === gameBoard.thirdRow[2])
         ) {
             console.log(`${turn.player} won!`);
+            console.table(gameBoard);
+            turn.player === settings.playerOne ? score.playerOne += 1 : score.playerTwo += 1;
+            console.log(score.playerOne);
+            console.log(score.playerTwo);
             turn.gameOver = true;
         } else if (//check diagonals
             (gameBoard.firstRow[0] !== '' &&
@@ -91,22 +114,36 @@ const game = (function () {
                 gameBoard.secondRow[1] === gameBoard.thirdRow[0])
         ) {
             console.log(`${turn.player} won!`);
+            console.table(gameBoard);
+            turn.player === settings.playerOne ? score.playerOne += 1 : score.playerTwo += 1;
+            console.log(score.playerOne);
+            console.log(score.playerTwo);
             turn.gameOver = true;
         } else if (turn.counter === 9) { //check draw
             console.log(`It's a draw!`);
+            console.table(gameBoard);
             turn.gameOver = true;
         }
 
     };
     function init() {
         console.table(gameBoard);
-        players.playerOne = prompt('Player 1:');
-        turn.player = players.playerOne;
-        console.log(`Player 1 is ${players.playerOne}`)
-        players.playerTwo = prompt('Player 2:');  
-        console.log(`Player 2 is ${players.playerTwo}`)
+        settings.gameMode = prompt('Game Mode: select pvp or pve');
+        if (settings.gameMode === 'pvp') {
+            settings.playerOne = prompt('Player 1:');
+            turn.player =  settings.playerOne;
+            console.log(`Player 1 is ${settings.playerOne}`)
+            settings.playerTwo = prompt('Player 2:');
+            console.log(`Player 2 is ${settings.playerTwo}`)
+        } else if (settings.gameMode === 'pve') {
+            settings.playerOne = prompt('Player:');
+            turn.player = settings.playerOne;
+            settings.playerTwo = 'Computer';
+            console.log(`You are ${settings.playerOne}`)
+        }
         console.log(`It's ${turn.player}'s turn!`);
     };
+
 
     init();
     return { writeBoard, resetGame }
