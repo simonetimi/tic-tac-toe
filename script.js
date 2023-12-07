@@ -1,6 +1,6 @@
 const game = (function () {
 
-    const gameBoard = {
+    let gameBoard = {
         firstRow: ['', '', ''],
         secondRow: ['', '', ''],
         thirdRow: ['', '', '']
@@ -16,6 +16,18 @@ const game = (function () {
         counter: 1,
         gameOver: false
     }
+
+    function resetGame () {
+        turn.gameOver = false;
+        turn.counter = 1;
+        turn.player = '';
+        players.playerOne = '';
+        players.playerTwo = '';
+        gameBoard.firstRow = ['', '', ''];
+        gameBoard.secondRow = ['', '', ''];
+        gameBoard.thirdRow = ['', '', ''];
+        init();
+    };
 
     // Writes X or O depending on player, 'row' or others and the index 0, 1 or 3. Example: writeBoard('player1', 'firstRow', 1)
     function writeBoard(row, index) {
@@ -86,17 +98,18 @@ const game = (function () {
         }
 
     };
-    (function init() {
+    function init() {
+        console.table(gameBoard);
         players.playerOne = prompt('Player 1:');
         turn.player = players.playerOne;
         console.log(`Player 1 is ${players.playerOne}`)
         players.playerTwo = prompt('Player 2:');  
         console.log(`Player 2 is ${players.playerTwo}`)
         console.log(`It's ${turn.player}'s turn!`);
-    })();
+    };
 
-    console.table(gameBoard);
-    return { players, writeBoard }
+    init();
+    return { writeBoard, resetGame }
 
 })();
 
