@@ -25,6 +25,88 @@ const game = (function () {
         randomRow: ''
     };
 
+    const ui = {
+        slot1: document.getElementById('1'),
+        slot2: document.getElementById('2'),
+        slot3: document.getElementById('3'),
+        slot4: document.getElementById('4'),
+        slot5: document.getElementById('5'),
+        slot6: document.getElementById('6'),
+        slot7: document.getElementById('7'),
+        slot8: document.getElementById('8'),
+        slot9: document.getElementById('9')
+    };
+
+    const welcome = {
+        pveBtn: document.getElementById('pve').addEventListener('click', () => {
+            settings.gameMode = 'pve';
+            interface.pickMode.classList.add("hide");
+            interface.pveInputName.classList.toggle('hide');
+        }),
+        pvpBtn: document.getElementById('pvp').addEventListener('click', () => {
+            settings.gameMode = 'pvp';
+            interface.pickMode.classList.add("hide");
+            interface.pvpInputName.classList.toggle('hide');
+
+            // DEVE DIVENTARE UN FIELD INPUT settings.playerOne = prompt('Player 1:');
+            // DEVE DIVENTARE L'EFFETTO DI UN LISTENER EVENT turn.player = settings.playerOne;
+            // console.log(`Player 1 is ${settings.playerOne}`)
+            // DEVE DIVENTARE UN FIELD INPUT settings.playerTwo = prompt('Player 2:');
+            // DEVE DIVENTARE L'EFFETTO DI UN LISTENER EVENT console.log(`Player 2 is ${settings.playerTwo}`)
+        })
+    }
+
+    const interface = {
+        pickMode: document.getElementById('pick-mode'),
+        pveInputName: document.getElementById('pve-input-name'),
+        pvpInputName: document.getElementById('pvp-input-name'),
+        status: document.getElementById('status'),
+        playerOneName: document.getElementById('player1-name'),
+        playerTwoName: document.getElementById('player2-name'),
+        playerOneScore: document.getElementById('player1-score'),
+        playerTwoScore: document.getElementById('player2-score'),
+        gameGrid: document.querySelector('.game-grid'),
+        pveSubBtn: document.getElementById('pve-submit').addEventListener('click', () => {
+            const inputValue = document.getElementById('pve-player1-name').value;
+            if (inputValue.length < 2 || inputValue.length > 20) {
+                return;
+            } else {
+                settings.playerOne = document.getElementById('pve-player1-name').value;
+                turn.player = settings.playerOne;
+                settings.playerTwo = 'Computer';
+                interface.pveInputName.classList.toggle('hide');
+                init();
+            }
+        }),
+        pveSubBtn: document.getElementById('pvp-submit').addEventListener('click', () => {
+            const inputValueOne = document.getElementById('pvp-player1-name').value;
+            const inputValueTwo = document.getElementById('pvp-player2-name').value;
+            if ((inputValueOne.length < 2 || inputValueOne.length > 16) &&
+                (inputValueTwo.length < 2 || inputValueTwo.length > 16) &&
+                inputValueOne !== inputValueTwo) {
+                return;
+            } else {
+                settings.playerOne = document.getElementById('pvp-player1-name').value;
+                settings.playerTwo = document.getElementById('pvp-player2-name').value;
+                turn.player = settings.playerOne;
+                interface.pvpInputName.classList.toggle('hide');
+                init();
+            }
+        }),
+            turnStatus: document.querySelector('.round')
+    };
+
+    function init() {
+        interface.playerOneName.innerHTML = `${settings.playerOne}`;
+        interface.playerTwoName.innerHTML = `${settings.playerTwo}`;
+        interface.playerOneScore.innerHTML = `${score.playerOne}`;
+        interface.playerTwoScore.innerHTML = `${score.playerTwo}`;
+        interface.status.classList.toggle('hide');
+        interface.gameGrid.classList.toggle('hide');
+        interactiveBoard.addClick();
+        interface.turnStatus.innerHTML = `It's ${turn.player}'s turn!`;
+    }
+
     const checkBoard = {
         lastClick: '',
         read: () => {
@@ -48,18 +130,6 @@ const game = (function () {
                 checkBoard.lastClick = 9;
             }
         }
-    };
-            
-    const ui = {
-        slot1: document.getElementById('1'),
-        slot2: document.getElementById('2'),
-        slot3: document.getElementById('3'),
-        slot4: document.getElementById('4'),
-        slot5: document.getElementById('5'),
-        slot6: document.getElementById('6'),
-        slot7: document.getElementById('7'),
-        slot8: document.getElementById('8'),
-        slot9: document.getElementById('9')
     };
 
     function clickEvent(event) {
@@ -109,22 +179,43 @@ const game = (function () {
         }
     };
 
-    const addClick = (function () {
-        for (const slot in ui) {
-            if (ui.hasOwnProperty(slot)) {
-                ui[slot].addEventListener('click', clickEvent);
+
+    const interactiveBoard = {
+        addClick: () => {
+            for (const slot in ui) {
+                if (ui.hasOwnProperty(slot)) {
+                    ui[slot].addEventListener('click', clickEvent);
+                };
             };
-        };
-    })();
+        },
+        removeClick: () => {
+            for (const slot in ui) {
+                if (ui.hasOwnProperty(slot)) {
+                    ui[slot].removeEventListener('click', clickEvent);
+                };
+            };
+        },
+        clearBoardUi: () => {
+            Object.keys(ui).forEach(slot => {
+                while (ui[slot].firstChild) {
+                    ui[slot].removeChild(ui[slot].firstChild);
+                }
+            });
+        }
+    };
 
 
-    function nextRound() { //da collegare alla funzione checkWinner (con delay)
+    function nextRound() {
         turn.gameOver = false;
         turn.counter = 1;
         turn.player = settings.playerOne;
         gameBoard.firstRow = ['', '', ''];
         gameBoard.secondRow = ['', '', ''];
         gameBoard.thirdRow = ['', '', ''];
+        interactiveBoard.clearBoardUi();
+        interactiveBoard.removeClick();
+        interactiveBoard.addClick();
+        interface.turnStatus.innerHTML = `It's ${turn.player}'s turn!`;
     };
 
     function resetGame() {
@@ -156,7 +247,6 @@ const game = (function () {
         })();
     };
 
-    // Writes X or O depending on player, 'row' or others and the index 0, 1 or 3. Example: writeBoard('player1', 'firstRow', 1)
     function writeBoard(row, index) {
         if (turn.gameOver) {
             return;
@@ -171,8 +261,7 @@ const game = (function () {
                 } else {
                     turn.player = settings.playerTwo;
                     turn.counter += 1;
-                    console.table(gameBoard);
-                    console.log(`It's ${turn.player}'s turn!`);
+                    interface.turnStatus.innerHTML = `It's ${turn.player}'s turn!`;
                 }
             } else if (turn.player === settings.playerTwo && gameBoard[row][index] === '') {
                 gameBoard[row][index] = 'O';
@@ -183,12 +272,9 @@ const game = (function () {
                 } else {
                     turn.player = settings.playerOne;
                     turn.counter += 1;
-                    console.table(gameBoard);
-                    console.log(`It's ${turn.player}'s turn!`);
+                    interface.turnStatus.innerHTML = `It's ${turn.player}'s turn!`;
                 }
             } else {
-                console.table(gameBoard);
-                console.log('That position is occupied! Try a different move');
                 return;
             }
         } else if (settings.gameMode === 'pve') { //computer game functions
@@ -200,9 +286,10 @@ const game = (function () {
             } else {
                 turn.player = settings.playerTwo;
                 turn.counter += 1;
-                console.table(gameBoard);
-                console.log(`It's ${settings.playerTwo}'s turn!`);
+                interface.turnStatus.innerHTML = `It's ${turn.player}'s turn!`;
                 randomMove();
+                //disable buttons
+                interactiveBoard.removeClick();
                 setTimeout(() => {
                     while (gameBoard[turn.randomRow][turn.randomIndex] !== '') {
                         randomMove();
@@ -210,15 +297,17 @@ const game = (function () {
                     gameBoard[turn.randomRow][turn.randomIndex] = 'O';
                     checkBoard.read();
                     renderSlot()
+                    checkWinner()
                     if (turn.gameOver) {
                         return;
                     } else {
                         turn.player = settings.playerOne;
                         turn.counter += 1;
-                        console.table(gameBoard);
-                        console.log(`It's ${turn.player}'s turn!`);
+                        interface.turnStatus.innerHTML = `It's ${turn.player}'s turn!`;
                     }
-                }, 2000);
+                    interactiveBoard.addClick();
+                }, 1500);
+                //enable buttons
             }
         };
     };
@@ -228,10 +317,13 @@ const game = (function () {
             gameBoard.secondRow.every((element, index, arr) => element !== '' && element === arr[0]) ||
             gameBoard.thirdRow.every((element, index, arr) => element !== '' && element === arr[0])
         ) {
-            console.log(`${turn.player} won!`);
-            console.table(gameBoard);
+            interface.turnStatus.innerHTML = `${turn.player} won! Next round in 3... 2... 1...`;
             updateScores();
             turn.gameOver = true;
+            //restarts round after 3 seconds
+            setTimeout(() => {
+                nextRound();
+            }, "4000");
         } else if ( //check columns
             (gameBoard.firstRow[0] !== '' &&
                 gameBoard.firstRow[0] === gameBoard.secondRow[0] &&
@@ -243,10 +335,13 @@ const game = (function () {
                 gameBoard.firstRow[2] === gameBoard.secondRow[2] &&
                 gameBoard.secondRow[2] === gameBoard.thirdRow[2])
         ) {
-            console.log(`${turn.player} won!`);
-            console.table(gameBoard);
+            interface.turnStatus.innerHTML = `${turn.player} won! Next round in 3... 2... 1...`;
             updateScores();
             turn.gameOver = true;
+            //restarts round after 3 seconds
+            setTimeout(() => {
+                nextRound();
+            }, "4000");
         } else if (//check diagonals
             (gameBoard.firstRow[0] !== '' &&
                 gameBoard.firstRow[0] === gameBoard.secondRow[1] &&
@@ -255,41 +350,27 @@ const game = (function () {
                 gameBoard.firstRow[2] === gameBoard.secondRow[1] &&
                 gameBoard.secondRow[1] === gameBoard.thirdRow[0])
         ) {
-            console.log(`${turn.player} won!`);
-            console.table(gameBoard);
+            interface.turnStatus.innerHTML = `${turn.player} won! Next round in 3... 2... 1...`;
             updateScores();
             turn.gameOver = true;
+            //restarts round after 3 seconds
+            setTimeout(() => {
+                nextRound();
+            }, "4000");
         } else if (turn.counter === 9) { //check draw
-            console.log(`It's a draw!`);
-            console.table(gameBoard);
+            interface.turnStatus.innerHTML = `It's a draw! Next round in 3... 2... 1...`;
             turn.gameOver = true;
+            //restarts round after 3 seconds
+            setTimeout(() => {
+                nextRound();
+            }, "4000");
         }
         function updateScores() {
             turn.player === settings.playerOne ? score.playerOne += 1 : score.playerTwo += 1;
-            console.log(`${settings.playerOne}'s score: ${score.playerOne}`);
-            console.log(`${settings.playerTwo}'s score: ${score.playerTwo}`);
+            interface.playerOneScore.innerHTML = `${score.playerOne}`;
+            interface.playerTwoScore.innerHTML = `${score.playerTwo}`;
         }
+
     };
-
-    function init() {
-        console.table(gameBoard);
-        settings.gameMode = prompt('Game Mode: select pvp or pve');
-        if (settings.gameMode === 'pvp') {
-            settings.playerOne = prompt('Player 1:');
-            turn.player = settings.playerOne;
-            console.log(`Player 1 is ${settings.playerOne}`)
-            settings.playerTwo = prompt('Player 2:');
-            console.log(`Player 2 is ${settings.playerTwo}`)
-        } else if (settings.gameMode === 'pve') {
-            settings.playerOne = prompt('Player:');
-            turn.player = settings.playerOne;
-            settings.playerTwo = 'Computer';
-            console.log(`You are ${settings.playerOne}`)
-        }
-        console.log(`It's ${turn.player}'s turn!`);
-    };
-
-
-    init();
 
 })();

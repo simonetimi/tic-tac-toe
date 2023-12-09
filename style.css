@@ -7,38 +7,106 @@
 }
 
 * {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   height: 100vh;
   font-family: 'Press Start 2P';
   color: var(--text);
+  background: var(--neon);
   display: grid;
   grid-template: 3fr 7fr 22fr 1fr / 1fr;
+  background: var(--main);
 }
 
 header {
-  background: var(--neon);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.8rem;
+  font-size: clamp(0.5rem, 0.3rem + 1.0667vw, 0.9rem);
   text-shadow: 1px 1px 0px #000000;
 }
 
+h1 {
+  text-shadow: 0 0 5px #ffd966, 0 0 15px #ffd966, 0 0 20px #ffd966, 0 0 40px #ffd966, 0 0 60px #ff7700, 0 0 10px #ffd966, 0 0 98px #ff7700;
+  color: #fff6a9;
+  animation: blink 6s infinite;
+  -webkit-animation: blink 6s infinite;
+}
+
 section {
+  font-size: clamp(0.4rem, 0.5rem + 1.0667vw, 0.8rem);
   background: var(--neon);
-  border-top: 1px solid white; /*debug purpose */
   text-shadow: 1px 1px 0px #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+#pick-mode {
+  display: flex;
+  gap: 2rem;
+}
+
+#pick-mode>button {
+  font-size: calc(0.4rem + 0.6vw);
+  width: fit-content;
+  padding: 0.8rem 1rem;
+  white-space: nowrap;
+}
+
+#pve-input-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+#pvp-input-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+#pvp-player1-name,
+#pvp-player2-name {
+  margin: 0 0.4rem;
+}
+
+.score {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.6em;
+}
+
+.round {
+  font-size: calc(0.5rem + 0.7vw);
+}
+
+#status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1.6em;
+  font-size: calc(0.32rem + 0.7vw);
 }
 
 main {
   display: flex;
   justify-content: center;
   align-items: center;
+  justify-self: center;
   background: var(--main);
+  border-radius: 12px;
+  width: 100vw;
 }
 
 .game-grid {
@@ -49,10 +117,9 @@ main {
   background-image: url(images/grid.png);
   background-repeat: no-repeat, repeat;
   background-size: 101%;
-
 }
 
-.game-grid > div {
+.game-grid>div {
   width: 9rem;
   height: 9rem;
   display: flex;
@@ -67,27 +134,115 @@ main {
   animation: zoomIn 0.5s ease-in-out forwards;
 }
 
+footer {
+  display: flex;
+  width: 100%;
+  background-color: var(--neon);
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.6rem;
+  text-shadow: 0px 1px 1px black;
+  text-shadow: 1px 1px 0px #000000;
+}
+
+#github {
+  width: 16px;
+}
+
+button {
+  border: 0;
+  background: #ffb300;
+  border-radius: 4px;
+  box-shadow: 0 5px 0 #d39300;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  margin: 0;
+  outline: 0;
+  transition: all .1s linear;
+  font-size: calc(0.3rem + 0.7vw);
+  width: fit-content;
+  padding: 0.8rem 1rem;
+  white-space: nowrap;
+}
+
+button:active {
+  box-shadow: 0 2px 0 #d39300;
+  transform: translateY(3px);
+}
+
+input {
+  background-color: var(--neon);
+  border-radius: 10px;
+  padding: 0.4rem;
+  font-family: 'Press Start 2P';
+  font-size: calc(0.5rem + 0.5vw);
+  color: var(--text);
+  border: 1px solid white;
+  width: calc(5rem + 14vw);
+}
+
+input:focus {
+  outline: none;
+}
+
+.hide {
+  display: none !important;
+}
+
+/* Animations */
+
 @keyframes zoomIn {
   from {
     transform: scale(0);
   }
+
   to {
     transform: scale(1);
   }
 }
 
-footer {
-    display: flex;
-    width: 100%;
-    background-color: var(--neon);
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.6rem;  text-shadow: 0px 1px 1px black;
-    text-shadow: 1px 1px 0px #000000;
+@-webkit-keyframes blink {
+
+  20%,
+  24%,
+  55% {
+    color: #111;
+    text-shadow: none;
+  }
+
+  0%,
+  19%,
+  21%,
+  23%,
+  25%,
+  54%,
+  56%,
+  100% {
+    text-shadow: 0 0 5px #ffd966, 0 0 15px #ffa500, 0 0 20px #ffa500, 0 0 40px #ffa500, 0 0 60px #ffa600, 0 0 10px #ffa600, 0 0 98px #ffa600;
+    color: #fff6a9;
+  }
 }
 
-#github {
-    width: 16px;
-}
+@keyframes blink {
 
+  20%,
+  24%,
+  55% {
+    color: #111;
+    text-shadow: none;
+  }
+
+  0%,
+  19%,
+  21%,
+  23%,
+  25%,
+  54%,
+  56%,
+  100% {
+    text-shadow: 0 0 5px #ffd966, 0 0 15px #ffa500, 0 0 20px #ffa500, 0 0 40px #ffa500, 0 0 60px #ffa600, 0 0 10px #ffa600, 0 0 98px #ffa600;
+    color: #fff6a9;
+  }
+}

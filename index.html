@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="style.css">
@@ -7,23 +8,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic-Tac-Toe</title>
 </head>
+
 <body>
     <header>
         <h1>Play Tic-Tac-Toe!</h1>
     </header>
 
     <section>
-        <div id="pick-mode"></div>
-        <div id="pvp-get-names"></div>
-        <div id="pve-get-name"></div>
-        <div id="pvp-turn"></div>
-        <div id="pve-turn"></div>
-        <div id="pvp-winner"></div>
-        <div id="pve-winner"></div>
+        <div id="pick-mode">
+            <button id="pve">Play vs Computer</button>
+            <button id="pvp">Play vs Player</button>
+        </div>
+        <div id="pve-input-name" class="hide">
+            <input id="pve-player1-name" type="text" placeholder="Player name">
+            <button id="pve-submit">Ok</button>
+        </div>
+        <div id="pvp-input-name" class="hide">
+            <div>
+            <input id="pvp-player1-name" type="text" placeholder="Player 1 name">
+            <input id="pvp-player2-name" type="text" placeholder="Player 2 name">
+            </div>
+            <button id="pvp-submit">Ok</button>
+        </div>
+        <div id="status" class="hide">
+            <div class="score">
+                <p><span id="player1-name"></span>'s score: <span id="player1-score"></span></p>
+                <p> | </p>
+                <p><span id="player2-name"></span>'s score: <span id="player2-score"></span></p>
+            </div>
+            <div class="round"></div>
+        </div>
     </section>
 
     <main>
-        <div class="game-grid">
+        <div class="game-grid hide">
             <div id="1"></div>
             <div id="2"></div>
             <div id="3"></div>
@@ -39,7 +57,8 @@
     <footer>
         <p>2023 © Simone Timi</p><a href="https://github.com/simonetimi" target="_blank">
             <img src="images/github-mark-white.png" id="github" alt="GitHub logo"></a>
-    </p>
+        </p>
     </footer>
 </body>
+
 </html>
