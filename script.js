@@ -82,8 +82,8 @@ const game = (function () {
             const inputValueOne = document.getElementById('pvp-player1-name').value;
             const inputValueTwo = document.getElementById('pvp-player2-name').value;
             if ((inputValueOne.length < 2 || inputValueOne.length > 16) &&
-                (inputValueTwo.length < 2 || inputValueTwo.length > 16) &&
-                inputValueOne !== inputValueTwo) {
+                (inputValueTwo.length < 2 || inputValueTwo.length > 16) ||
+                inputValueOne === inputValueTwo) {
                 return;
             } else {
                 settings.playerOne = document.getElementById('pvp-player1-name').value;
