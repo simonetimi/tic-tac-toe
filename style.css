@@ -87,7 +87,7 @@ section {
 }
 
 .round {
-  font-size: calc(0.5rem + 0.7vw);
+  font-size: calc(0.4rem + 0.7vw);
 }
 
 #status {
