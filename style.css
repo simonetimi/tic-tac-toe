@@ -87,6 +87,12 @@ section {
 }
 
 .round {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2em;
+  margin-bottom: 0.4em;
   font-size: calc(0.4rem + 0.7vw);
 }
 

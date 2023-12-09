@@ -317,7 +317,7 @@ const game = (function () {
             gameBoard.secondRow.every((element, index, arr) => element !== '' && element === arr[0]) ||
             gameBoard.thirdRow.every((element, index, arr) => element !== '' && element === arr[0])
         ) {
-            interface.turnStatus.innerHTML = `${turn.player} won! Next round in 3... 2... 1...`;
+            interface.turnStatus.innerHTML = `<p>${turn.player} won!</p><p>Next round in 3... 2... 1...</p>`;
             updateScores();
             turn.gameOver = true;
             //restarts round after 3 seconds
@@ -335,7 +335,7 @@ const game = (function () {
                 gameBoard.firstRow[2] === gameBoard.secondRow[2] &&
                 gameBoard.secondRow[2] === gameBoard.thirdRow[2])
         ) {
-            interface.turnStatus.innerHTML = `${turn.player} won! Next round in 3... 2... 1...`;
+            interface.turnStatus.innerHTML = `<p>${turn.player} won!</p><p>Next round in 3... 2... 1...</p>`;
             updateScores();
             turn.gameOver = true;
             //restarts round after 3 seconds
@@ -350,7 +350,7 @@ const game = (function () {
                 gameBoard.firstRow[2] === gameBoard.secondRow[1] &&
                 gameBoard.secondRow[1] === gameBoard.thirdRow[0])
         ) {
-            interface.turnStatus.innerHTML = `${turn.player} won! Next round in 3... 2... 1...`;
+            interface.turnStatus.innerHTML = `<p>${turn.player} won!</p><p>Next round in 3... 2... 1...</p>`;
             updateScores();
             turn.gameOver = true;
             //restarts round after 3 seconds
@@ -358,7 +358,7 @@ const game = (function () {
                 nextRound();
             }, "4000");
         } else if (turn.counter === 9) { //check draw
-            interface.turnStatus.innerHTML = `It's a draw! Next round in 3... 2... 1...`;
+            interface.turnStatus.innerHTML = `<p>${turn.player} won!</p><p>Next round in 3... 2... 1...</p>`;
             turn.gameOver = true;
             //restarts round after 3 seconds
             setTimeout(() => {
