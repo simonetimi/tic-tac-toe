@@ -358,7 +358,7 @@ const game = (function () {
                 nextRound();
             }, "4000");
         } else if (turn.counter === 9) { //check draw
-            interface.turnStatus.innerHTML = `<p>${turn.player} won!</p><p>Next round in 3... 2... 1...</p>`;
+            interface.turnStatus.innerHTML = `It's a draw!</p><p>Next round in 3... 2... 1...</p>`;
             turn.gameOver = true;
             //restarts round after 3 seconds
             setTimeout(() => {
