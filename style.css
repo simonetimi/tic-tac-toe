@@ -118,24 +118,24 @@ main {
 .game-grid {
   display: grid;
   grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-  width: 27rem;
-  height: 27rem;
+  width: calc(14rem + 16vw);
+  height: calc(14rem + 16vw);
+  margin: 0.4rem;
   background-image: url(images/grid.png);
   background-repeat: no-repeat, repeat;
   background-size: 101%;
 }
 
 .game-grid>div {
-  width: 9rem;
-  height: 9rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .icon {
-  width: 5rem;
-  height: 5rem;
+  object-fit: cover;
+  width: 70%;
+  height: 70%;
   transform: scale(0);
   animation: zoomIn 0.5s ease-in-out forwards;
 }
